@@ -11,13 +11,11 @@ for k = 1 : length(theFiles)
     OUTFOLDER = sprintf('%s/OUT-%s', myFolder, f) ;
   disp(f);
     
-    %fprintf(1, 'Now reading %s\n', fullFileName);
-    % Now do whatever you want with this file name,
-    % such as reading it in as an image array with imread()
+
     I = imread(fullFileName);
     imshow(I);  % Display image.
     h = images.roi.Point(gca,'Position',[160 160]);
-%h = drawpoint('Color','r'); 
+
 h.Label = 'Marqueur';
 mydlg = warndlg ('Deplacez le marqueur au niveau de la ZAC puis OK', 'Warning');
 waitfor(mydlg);
@@ -29,20 +27,18 @@ se2 = strel('line',4,45);
 se3 = strel('line',4,90);
 se4 = strel("disk",2,4);   
 sth = strel('disk',10);
-%tophatFiltered = imtophat(I,sth);
+
 contrastAdjusted = imadjust(I,[0.1 0.5],[]);
 imshow (contrastAdjusted);
 BW1 = imbinarize(im2gray(contrastAdjusted));
-%IC = imtophat(I,sth);
+
 BW2 = edge(BW1,'canny', 0.2);
 imshow (BW2);
 BW6 = imdilate(BW2,[se1 se2 se3],'full');
 BW11 = imerode(BW6,se4);
 BW16 = imcomplement(BW11);
 BW21 = bwselect(BW16,c,r);
-    %POS = BW21.Position;
-  
-%imshowpair (BW21,BW22,method="montage");
+
 BW500 = imfill(BW21, 'holes');
 BW22 = imresize(BW500, [350 350] );
 ROIFILE = OUTFOLDER+"/C-ROI.jpg" ;
